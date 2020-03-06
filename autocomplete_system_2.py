@@ -1,4 +1,4 @@
-from collections import defaultdict
+from collections import defaultdict, deque
 import heapq
 from typing import List
 
@@ -10,9 +10,9 @@ class AutocompleteSystem:
             self.count = count
 
         def __lt__(self, other):
-            if self.count != other.count:
-                return self.count < other.count
-            return self.sentence > other.sentence
+            if self.count == other.count:
+                return self.sentence > other.sentence
+            return self.count < other.count
 
     def __init__(self, sentences: List[str], times: List[int]):
         self.dic = defaultdict(int)
@@ -21,19 +21,19 @@ class AutocompleteSystem:
         self.search = ''
 
     def input(self, c: str) -> List[str]:
-        result = []
+        pq = []
         if c == '#':
             self.dic[self.search] += 1
             self.search = ''
-            return result
+            return pq
         self.search += c
         for k, v in self.dic.items():
             if k.startswith(self.search):
-                heapq.heappush(result, self.Pair(k, v))
-            if len(result) > 3:
-                heapq.heappop(result)
-        res = []
-        while result:
-            count_sentence = heapq.heappop(result)
-            res.insert(0, count_sentence.sentence)
-        return res
+                heapq.heappush(pq, self.Pair(k, v))
+            if len(pq) > 3:
+                heapq.heappop(pq)
+        result = deque()
+        while pq:
+            count_sentence = heapq.heappop(pq)
+            result.insert(0, count_sentence.sentence)
+        return result
