@@ -2,7 +2,7 @@ class AutocompleteSystem {
 
     private TrieNode root;
     
-    // track where we are, as characters are being typed/input'd
+    // track where we are, as characters are being typed/input
     private StringBuilder prefix;
     private TrieNode persistentCursor;
     
