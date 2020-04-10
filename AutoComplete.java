@@ -1,15 +1,15 @@
 
 //Complexity
-// Time - O(len * a) + O(prefix +  n + elogk) 
+// Time - O(len * a) + O(prefix +  n + eloge) 
 // where a -> # of sentences, len -> avg length of each sentence
 // n -> number of nodes searched for the prefix
-// k -> top k searches
+// e -> searched sentences
 
 // Space - O(len * a) + O(prefix +  e) 
 // where a -> # of sentences, len -> avg length of each sentence
 // n -> number of nodes searched for the prefix
-// k -> top k searches
-// e -> matched sentences
+// e -> searched sentences
+
 
 class AutocompleteSystem {
     
