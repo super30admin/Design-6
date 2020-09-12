@@ -59,3 +59,8 @@ class AutocompleteSystem {
  * AutocompleteSystem obj = new AutocompleteSystem(sentences, times);
  * List<String> param_1 = obj.input(c);
  */
+ Approach 2 : Using Trie Data Strcuture
+ Time COmplexity : O(n)
+ Space Complexity :
+ 
+ 
