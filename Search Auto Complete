@@ -1,55 +1,61 @@
 Approach 1 : Brute Force using Hashmap and Priority Queue
-Time Complexity :
-Space Complexity :
-class PhoneDirectory {
-    HashSet<Integer> set;
-    Queue<Integer> q;
-    int max;
+Time Complexity : O(nlogk)
+Space Complexity : 
+class AutocompleteSystem {
+    HashMap<String,Integer> map;
+    String input;
 
-    /** Initialize your data structure here
-        @param maxNumbers - The maximum numbers that can be stored in the phone directory. */
-    public PhoneDirectory(int maxNumbers) {
-        set=new HashSet<>();
-        q=new LinkedList<>();
-        max=maxNumbers;
-        for(int i=0;i<max;i++){
-            set.add(i); q.add(i);
+    public AutocompleteSystem(String[] sentences, int[] times) {
+        // Constructor . Here we are building our hashmap with the list of sentences.Recording the historical data.
+        input="";
+        map=new HashMap<>();
+        for(int i=0;i<sentences.length;i++){
+        map.put(sentences[i],map.getOrDefault(sentences[i],0)+times[i]);
         }
-        
     }
     
-    /** Provide a number which is not assigned to anyone.
-        @return - Return an available number. Return -1 if none is available. */
-    public int get() {//O(1)
-        if (!q.isEmpty()){
-            int n=q.poll();
-            set.remove(n);
-            return n;
+    public List<String> input(char c) {
+        if (c == "#"){
+            map.put(input,map.getOrDefault(input,0)+1);
+            input = ""; // Resetting the input
+            return new ArrayList<>(); // Return list of strings.          
         }
-        return -1;
+                  
+        PriorityQueue<Pair> pq=new PriorityQueue<>((a,b)->{
+            if(a.count==b.count){
+                return b.sentence.compareTo(a.sentence); //Lexiographically entering into Queue
+        } 
+         return a.count-b.count; 
+            
+        });
+        input+=c;
+        for(String key:map.keysize()){
+            if(key.startsWith(input)){
+                pq.add(new Pair(key,map.get(key)));
+                if(pq.size()>3){// PQ of size 3
+                    pq.poll();// Lexigraphically worst element
+                }
+            }
+        }
+        List<String> result=new ArrayList<>();
+        while(!pqisEmpty()){
+            result.add(0,pq.poll().sentence);
+        }
+        return result;
         
     }
-    
-    /** Check if a number is available or not. */
-    public boolean check(int number) {
-        return set.contains(number);//O(1)
-        
-    }
-    
-    /** Recycle or release a number. */
-    public void release(int number) {//O(1)
-        if(!set.contains(number)){ //&& number < max){
-            set.add(number);
-            q.add(number);
-        }
-        
+    class Pair {
+        String Sentence;
+        int count;
+        public Pair(String Sentence,int count){
+            this.sentence=sentence;
+            this.count=count;
+        }        
     }
 }
 
 /**
- * Your PhoneDirectory object will be instantiated and called as such:
- * PhoneDirectory obj = new PhoneDirectory(maxNumbers);
- * int param_1 = obj.get();
- * boolean param_2 = obj.check(number);
- * obj.release(number);
+ * Your AutocompleteSystem object will be instantiated and called as such:
+ * AutocompleteSystem obj = new AutocompleteSystem(sentences, times);
+ * List<String> param_1 = obj.input(c);
  */
