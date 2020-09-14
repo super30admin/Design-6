@@ -15,7 +15,7 @@ class AutocompleteSystem {
     }
     
     public List<String> input(char c) {
-        if (c == "#"){
+        if (c == '#'){
             map.put(input,map.getOrDefault(input,0)+1);
             input = ""; // Resetting the input
             return new ArrayList<>(); // Return list of strings.          
@@ -23,13 +23,13 @@ class AutocompleteSystem {
                   
         PriorityQueue<Pair> pq=new PriorityQueue<>((a,b)->{
             if(a.count==b.count){
-                return b.sentence.compareTo(a.sentence); //Lexiographically entering into Queue
+                return b.sentence.compareTo(a.sentence); //Lexiographically entering into //Queue
         } 
          return a.count-b.count; 
             
         });
         input+=c;
-        for(String key:map.keysize()){
+        for(String key:map.keySet()){
             if(key.startsWith(input)){
                 pq.add(new Pair(key,map.get(key)));
                 if(pq.size()>3){// PQ of size 3
@@ -38,16 +38,16 @@ class AutocompleteSystem {
             }
         }
         List<String> result=new ArrayList<>();
-        while(!pqisEmpty()){
+        while(!pq.isEmpty()){
             result.add(0,pq.poll().sentence);
         }
         return result;
         
     }
     class Pair {
-        String Sentence;
+        String sentence;
         int count;
-        public Pair(String Sentence,int count){
+        public Pair(String sentence,int count){
             this.sentence=sentence;
             this.count=count;
         }        
