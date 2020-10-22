@@ -9,7 +9,10 @@
         # Optimized approach: 
                               
             # 1. 
-                    A) 
+                    A) Add all the numbers till maxNumbers into HashSet
+                    B) In get() if hashset is emoty then return -1, else return first available number from Hashset and remove from hashset
+                    C) In check(), check if input number is part of hashset or not.
+                    D) In release, add number to hashset.
     */ 
 class PhoneDirectory {
 

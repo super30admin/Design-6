@@ -9,7 +9,13 @@
         # Optimized approach: 
                               
             # 1. 
-                    A) 
+                    A) Create Hashmap and input_string to maintain input characters.
+                    B) Add all the strings with its times into hashmap.
+                    C) Now in input, check is  charatcer is # if it is '#' then insert it into hashmap by adding proper count.
+                    D) Create PriorityQueue with Custom Comparator, ((a,b) -> (a.repeat != b.repeat ? a.repeat - b.repeat : b.sentence.compareTo(a.sentence))
+                    E) Check if hashmap has strings that start with the input string, if it is then add it into the queue upto 3 elements
+                    F) Else pop when size exceeds 3.
+                    G) At the end add it into the list and reverse.
     */ 
 class AutocompleteSystem {
 
