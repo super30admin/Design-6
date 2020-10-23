@@ -69,7 +69,7 @@ Note:
 
 
 /*
- * Time Complexity: O (N) -> for loops
+ * Time Complexity: O (N logN) -> To store 'N' nodes in the Priority Queue 
  * 
  * Space Complexity: O (N) > HashMap to store 'N' historical sentences and Max Heap to store 'N' nodes for sentences that "starts with" sentence typed by user as input
  * 
