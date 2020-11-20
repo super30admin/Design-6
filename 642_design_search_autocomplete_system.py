@@ -1,4 +1,5 @@
 """
+Leetcode: https://leetcode.com/problems/design-search-autocomplete-system/
 Approach:
     1. Construct the database of sentences and times
     2. Track the current input by adding the char unless #(enter)
