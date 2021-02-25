@@ -10,13 +10,15 @@ class PhoneDirectory {
     /** Initialize your data structure here
      @param maxNumbers - The maximum numbers that can be stored in the phone directory. */
     Set<Integer> directory;
+    Queue<Integer> q;
 
     public PhoneDirectory(int maxNumbers) {
         directory = new HashSet<>();
+        q = new LinkedList<>();
 
-        // Store all the available numners in the set
         for(int i=0;i<maxNumbers;i++){
             directory.add(i);
+            q.add(i);
         }
 
     }
@@ -25,11 +27,10 @@ class PhoneDirectory {
      @return - Return an available number. Return -1 if none is available. */
     public int get() {
 
-        // return the first available number
-        for(int each:directory){
-            int val = each;
-            directory.remove(each);
-            return each;
+        if(!q.isEmpty()){
+            int val = q.poll();
+            directory.remove(val);
+            return val;
         }
 
         return -1;
@@ -42,7 +43,10 @@ class PhoneDirectory {
 
     /** Recycle or release a number. */
     public void release(int number) {
-        directory.add(number);
+        if(!directory.contains(number)){
+            directory.add(number);
+            q.offer(number);
+        }
     }
 }
 
