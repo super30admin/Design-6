@@ -68,6 +68,7 @@ class AutocompleteSystem {
         sb = new StringBuilder();
         for (int i = 0; i < sentences.length; i++)
         {
+            
             map.put(sentences[i], map.getOrDefault(sentences[i], 0) + times[i]);
             insertWordIntoTrie(sentences[i], times[i]);
         }
@@ -77,8 +78,10 @@ class AutocompleteSystem {
         if (c == '#')
         {
             String in = sb.toString();
-            insertWordIntoTrie(in, 1);
+            //add to map first
             map.put(in, map.getOrDefault(in, 0) + 1);
+            //then to trie
+            insertWordIntoTrie(in, 1);
             sb = new StringBuilder();
             return new ArrayList();
         }
