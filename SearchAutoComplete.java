@@ -250,4 +250,122 @@ class AutocompleteSystem {
 }
 
 
+/**
 
+one more way
+
+
+**/
+
+
+class AutocompleteSystem {
+    
+    private class TrieNode {
+        HashMap<Character, TrieNode> children;
+        ArrayList<String> list;
+        
+        TrieNode(){
+            children = new HashMap();
+            list = new ArrayList();
+        }
+        
+        
+    }
+    
+    HashMap<String,Integer> hashMap = new HashMap();
+    StringBuilder input = new StringBuilder();
+    TrieNode root  = new TrieNode();
+    
+        
+        
+
+    private void add( String s) {
+        
+        TrieNode curr = root;
+        for(Character ch : s.toCharArray()) {
+            if(!curr.children.containsKey(ch)) {
+                curr.children.put(ch, new TrieNode());
+            }
+            curr = curr.children.get(ch);
+             ArrayList<String> temp = curr.list;
+            if(!temp.contains(s)) {
+               temp.add(s);    
+            }
+            
+           
+            Collections.sort(temp, (a,b) -> {
+                
+               if(hashMap.get(a) == hashMap.get(b)) {
+                   return String.valueOf(a).compareTo(String.valueOf(b));
+               } 
+                
+                
+                return hashMap.get(b) - hashMap.get(a);
+                
+            });
+            
+            // remove extra values
+            if(temp.size() > 3) {
+                temp.remove(3);
+            }
+            curr.list = temp;
+        }
+    }
+    
+    public AutocompleteSystem(String[] sentences, int[] times) {
+        
+        
+        for(int i = 0;i<sentences.length;i++) {
+            // add sentence to global counter map
+            hashMap.put(sentences[i], hashMap.getOrDefault(sentences[i],0) + times[i]);
+            
+            // add input sentence to Trie and build Trie Data Structure
+            add(sentences[i]);
+        }
+        
+        
+        
+    }
+    
+    private List<String> search(String input) {
+        
+        List<String> res = new ArrayList();
+        
+        TrieNode curr =root;
+        
+        for(Character ch : input.toCharArray()) {
+            if(!curr.children.containsKey(ch)) {
+                return  new ArrayList();
+            }
+            curr = curr.children.get(ch);
+        }
+        
+        return curr.list;
+        
+        
+    }
+    
+    public List<String> input(char c) {
+        // if special char
+        if(c == '#'){
+            String inputStr = input.toString();
+           hashMap.put(inputStr,hashMap.getOrDefault(inputStr,0)+1);
+            add( inputStr);
+            
+            input = new StringBuilder();
+            return new ArrayList();
+        }
+        
+        input.append(c);
+        String inputStr = input.toString();
+       
+        
+        return search(inputStr);
+    }
+}
+
+/**
+ * Your AutocompleteSystem object will be instantiated and called as such:
+ * AutocompleteSystem obj = new AutocompleteSystem(sentences, times);
+ * List<String> param_1 = obj.input(c);
+ */
