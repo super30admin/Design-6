@@ -121,3 +121,133 @@ class AutocompleteSystem {
  * AutocompleteSystem obj = new AutocompleteSystem(sentences, times);
  * List<String> param_1 = obj.input(c);
  */
+
+
+/**
+
+Optimized version with Trie DataStructure:
+
+Insert Complexity O(k*L) L is number of senetence , K is avg length of all the sentence
+
+input() search complexity : O(i + l  + k*logk) i is sentence length formed till now, l is longest length till end of Trie in worst case and k logk for hnadling sorting part
+**/
+
+class AutocompleteSystem {
+    
+    private class TrieNode {
+        // childrent of this node
+        HashMap<Character, TrieNode> children;
+        // maintain all the string and count starts with that String
+        HashMap<String, Integer> counter;
+        
+        public TrieNode() {
+            children = new HashMap();
+            counter = new HashMap();
+        }
+        
+    }
+    
+    TrieNode root;
+    StringBuilder input;
+    
+    public AutocompleteSystem(String[] sentences, int[] times) {
+        input = new StringBuilder();
+        root = new TrieNode();
+        // add all the sentence into our Trie Data Structure
+        for(int i = 0; i< sentences.length; i++) {
+            add(root, sentences[i], times[i]);
+        }
+    }
+    
+    // Helper function to add String to Trie
+    
+    private void add(TrieNode root, String s, int time) {
+        // if root contains string s then update the count
+        // else add String to root
+        TrieNode curr = root;
+        // String s not in trie node yet
+        for(Character ch :  s.toCharArray()) {
+            if(!curr.children.containsKey(ch)) {
+                curr.children.put(ch, new TrieNode());
+            }
+            curr = curr.children.get(ch);
+            curr.counter.put(s, curr.counter.getOrDefault(s, 0) +time);
+        }
+
+        
+        
+    }
+    
+    // helper method to search the input String in Trie
+    // return map <String,count> that starts with inputStr
+    private HashMap<String, Integer> search(String inputStr) {
+        HashMap<String, Integer> map = new HashMap();
+        //         traverse the Trie till you find the inputString
+        
+        TrieNode curr = root;
+        for(Character ch :  inputStr.toCharArray()) {
+            if(curr.children.get(ch) == null) {
+                return null;
+            }
+            
+            curr  = curr.children.get(ch);
+            
+        }
+        
+        return curr.counter;
+        
+    }
+    
+    // user typed char c add to current search and return the 
+    // suggestions based on past history
+    
+    public List<String> input(char c) {
+        
+        // if current char is # that means it is end of search
+        // return the []
+        // add current search in Trie Data Structure
+        if(c == '#') {
+            // end of the input search
+            String inputStr = input.toString();
+            add(root, inputStr, 1);
+            input = new StringBuilder();
+            return new ArrayList();
+        }
+        // Search
+        input.append(c);
+        String inputStr = input.toString();
+        
+        HashMap<String, Integer> map = search(inputStr);
+        
+        if(map == null) {
+            return new ArrayList();
+        }
+        
+        List<String> res = new ArrayList();
+        
+        // get top 3 senetence based on hotness
+        Queue<String> pq = new PriorityQueue((a,b) -> {
+           if(map.get(a) == map.get(b)) {
+               return String.valueOf(b).compareTo(String.valueOf(a));
+           } 
+            
+            return map.get(a) - map.get(b);
+        });
+        
+        for(String key : map.keySet()) {
+            pq.add(key);
+            if(pq.size() > 3) {
+                pq.remove();
+            }
+        }
+        
+        while(!pq.isEmpty()) {
+            res.add(0, pq.poll());
+        }
+        
+        return res;
+    }
+}
+
+
+
