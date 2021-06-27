@@ -1,12 +1,18 @@
 import java.util.*;
 
 public class AutocompleteSystem {
-    //TrieNode
-    //Children trienode array
-    //ListOfSentences
-    //Insert
-    //Search - get the input string - search in the trinode and return the list of sentences
-    //If the input key is # call insert method to inser it
+    //Normal Tries 
+    //Extra: Since we may have capital letters and spaces, instead of TrieNode array as a children.
+    //We have to use HashMap<Character, TrieNode>
+    //Extra: To reduce the time complexity by searching entire sentence. 
+    //Add extra hashmap to store the sentences and count.
+    //Steps:
+    //Insert all the sentences with occurances
+    //If user types '#' get the current typed string and insert.
+    //else search and get the hashmap
+    //Iterate with min heap then sort based on Lexographical if the occurance is equal.
+
+    //a.compareTo(b) - if a is smaller it will return negative. (e.g) "hello".compareTo("Man") returns -5
     
     class TrieNode {
         HashMap<Character, TrieNode> children;
