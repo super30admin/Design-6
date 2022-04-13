@@ -1,4 +1,5 @@
-# Design-6
+# Design-6: 
+### Note: Both the questions are Leetcode premium
 
 ## Problem1 Design Phone Directory (https://leetcode.com/problems/design-phone-directory/)
 
