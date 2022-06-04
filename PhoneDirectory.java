@@ -3,6 +3,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 
+// TC : O(n) -> n = maxNumbers. Since we will be putting n numbers in the queue or set
+// SC : O(1) -> Queue will always return the element from the front and set will return based on the key
 public class PhoneDirectory {
 
     Queue<Integer> queue;
