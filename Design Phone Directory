@@ -1,0 +1,15 @@
+class PhoneDirectory:
+    def __init__(self, maxNumbers: int):
+        self.set_ = set(range(maxNumbers))        
+    def get(self) -> int:
+        if not self.set_:
+            return -1
+        return self.set_.pop()
+    def check(self, number: int) -> bool:
+        return number in self.set_
+    def release(self, number: int) -> None:
+        self.set_.add(number)
+        
+# Time Complexity: O(n)
+# Space Complexity: O(1)
+# Successfully implemented on Leetcode
