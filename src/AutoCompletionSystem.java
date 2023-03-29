@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+/**
+ * A solution from Discussion forum which I found reasonable to understand
+ *
+ */
 class AutocompleteSystem {
 	class Node {
 		Map<String, Integer> times = new HashMap<>();
