@@ -7,51 +7,34 @@ import java.util.Set;
 // SC : O(1) -> Queue will always return the element from the front and set will return based on the key
 public class PhoneDirectory {
 
-    Queue<Integer> queue;
-    Set<Integer> set;
-
-    /**
-     *
-     * @param maxNumbers - The maximum numbers that can be stored in the phone directory.
-     */
+    Queue<Integer> available;
+    Set<Integer> used;
     public PhoneDirectory(int maxNumbers) {
-        queue = new LinkedList<>();
-        set = new HashSet<>();
+        this.available = new LinkedList<>();
+        this.used = new HashSet<>();
 
-        for(int i=0; i < maxNumbers; i++){
-            queue.add(i);
-            set.add(i);
+        for(int i=0; i < maxNumbers; i++) {
+            available.add(i);
         }
     }
-
-    /**
-     * Provide a number which is not assigned to anyone.
-        @return - Return an available number. Return -1 if none is available.
-     */
+    
     public int get() {
-        if(queue.isEmpty()) return -1;
+        if(available.isEmpty()) return -1;
 
-        int used = queue.poll();
-        set.remove(used);
-        return used;
+        int number = available.poll();
+        used.add(number);
+        return number;
     }
-
-    /**
-     * Check if a number is available or not.
-     */
+    
     public boolean check(int number) {
-        return set.contains(number);
+        return !used.contains(number);
     }
-
-    /** 
-        Recycle or release a number. 
-        If the number is already assigned to someone, do nothing; else, bring it back to our pool of numbers.
-    */
+    
     public void release(int number) {
-        if(set.contains(number)) return;
+        if(!used.contains(number)) return;
 
-        queue.add(number);
-        set.add(number);
+        used.remove(number);
+        available.add(number);
     }
 
     public static void main(String[] args) {
