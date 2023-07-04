@@ -43,7 +43,10 @@ public class PhoneDirectory {
         return set.contains(number);
     }
 
-    /** Recycle or release a number. */
+    /** 
+        Recycle or release a number. 
+        If the number is already assigned to someone, do nothing; else, bring it back to our pool of numbers.
+    */
     public void release(int number) {
         if(set.contains(number)) return;
 
