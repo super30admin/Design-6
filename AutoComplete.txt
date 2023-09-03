@@ -1,0 +1,84 @@
+/**
+Time Complexity - O(N)
+Space Complexity - O(N)
+ */
+class AutocompleteSystem {
+
+    class TrieNode {
+        TrieNode[] children;
+        List<String> topNresults;
+
+        public TrieNode() {
+            this.children = new TrieNode[256];
+            this.topNresults = new ArrayList<>();
+        }
+    }
+
+    private Map<String, Integer> map;
+    private String search;
+    private TrieNode root;
+
+    public AutocompleteSystem(String[] sentences, int[] times) {
+        map = new HashMap<>();
+        search = "";
+        root = new TrieNode();
+        for (int i=0; i<times.length; i++) {
+            map.put(sentences[i], map.getOrDefault(search,0) + times[i]);
+            insert(sentences[i]);
+        }
+    }
+
+    private void insert(String word) {
+        TrieNode curr = root;
+        for (int i=0; i< word.length(); i++) {
+            char ch = word.charAt(i);
+            if (curr.children[ch -' '] == null) {
+                curr.children[ch - ' '] = new TrieNode();
+            }
+            curr = curr.children[ch - ' '];
+            if (!curr.topNresults.contains(word)) {
+                curr.topNresults.add(word);
+            }
+
+            List<String> topNresults = curr.topNresults;
+            Collections.sort(topNresults, (String word1, String word2) -> {
+                if (map.get(word1) == map.get(word2)) {
+                    return word1.compareTo(word2);
+                }
+                return map.get(word2) - map.get(word1);
+            });
+            if (curr.topNresults.size() > 3) {
+                curr.topNresults = curr.topNresults.subList(0, 3);
+            }
+        }
+    }
+
+    private List<String> search(String prefix) {
+        TrieNode curr = root;
+        for (int i=0; i< prefix.length(); i++) {
+            char ch = prefix.charAt(i);
+            if (curr.children[ch - ' '] == null) {
+                return new ArrayList<>();
+            }
+            curr = curr.children[ch - ' '];
+        }
+        return curr.topNresults;
+    }
+    
+    public List<String> input(char c) {
+        if (c == '#') {
+            map.put(search, map.getOrDefault(search, 0) + 1);
+            insert(search);
+            this.search = "";
+            return new ArrayList<>();
+        }
+        this.search += c;
+        return search(search);
+    }
+}
+
+/**
+ * Your AutocompleteSystem object will be instantiated and called as such:
+ * AutocompleteSystem obj = new AutocompleteSystem(sentences, times);
+ * List<String> param_1 = obj.input(c);
+ */
