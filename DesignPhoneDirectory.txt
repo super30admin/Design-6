@@ -1,0 +1,48 @@
+/**
+Space Complexity - O(n)
+Time Complexity
+ get() - O(1)
+ check() - O(1)
+ release() - O(1)
+ */
+class PhoneDirectory {
+
+    private Set<Integer> allocatedNumbers;
+    private Queue<Integer> availableNumbers;
+
+    public PhoneDirectory(int maxNumbers) {
+        this.allocatedNumbers = new HashSet<>();
+        this.availableNumbers = new LinkedList<>();
+        for (int i=0; i<maxNumbers; i++) {
+            this.availableNumbers.add(i);
+        }
+    }
+    
+    public int get() {
+        if (!availableNumbers.isEmpty()) {
+            int num= availableNumbers.poll();
+            allocatedNumbers.add(num);
+            return num;
+        }
+        return -1;
+    }
+    
+    public boolean check(int number) {
+        return !allocatedNumbers.contains(number);
+    }
+    
+    public void release(int number) {
+        if (allocatedNumbers.contains(number)) {
+            allocatedNumbers.remove(number);
+            availableNumbers.add(number);
+        }
+    }
+}
+
+/**
+ * Your PhoneDirectory object will be instantiated and called as such:
+ * PhoneDirectory obj = new PhoneDirectory(maxNumbers);
+ * int param_1 = obj.get();
+ * boolean param_2 = obj.check(number);
+ * obj.release(number);
+ */
