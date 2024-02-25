@@ -1,0 +1,21 @@
+# Design Ph0one Directory
+
+
+Time Complexity: O(1) on average for each operation (except initialization, which is O(maxNumbers))
+Space Complexity: O(maxNumbers) for the set of available numbers.
+
+class PhoneDirectory:
+
+    def __init__(self, maxNumbers: int):
+        self.available_numbers = set(range(maxNumbers))
+
+    def get(self) -> int:
+        if self.available_numbers:
+            return self.available_numbers.pop()
+        return -1
+
+    def check(self, number: int) -> bool:
+        return number in self.available_numbers
+
+    def release(self, number: int) -> None:
+        self.available_numbers.add(number)
