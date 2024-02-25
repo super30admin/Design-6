@@ -1,0 +1,59 @@
+#Design search Autocomplete
+
+1. Time Complexity:
+Initialization: O(N * M)
+Searching and Retrieval: O(K) where K is the length of the prefix.
+
+2. Space Complexity:
+Initialization: O(N * M)
+Additional Space: O(1)
+
+
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.times = 0
+
+class AutocompleteSystem:
+    def __init__(self, sentences: List[str], times: List[int]):
+        self.root = TrieNode()
+        self.keyword = ''
+        
+        # Build the trie
+        for sentence, time in zip(sentences, times):
+            self.add_sentence(sentence, time)
+
+    def add_sentence(self, sentence: str, times: int) -> None:
+        node = self.root
+        for char in sentence:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
+        node.times += times
+
+    def input(self, c: str) -> List[str]:
+        if c == '#':
+            self.add_sentence(self.keyword, 1)
+            self.keyword = ''
+            return []
+
+        self.keyword += c
+        node = self.root
+        for char in self.keyword:
+            if char not in node.children:
+                return []
+            node = node.children[char]
+
+        return self.get_hot_sentences(node)
+
+    def get_hot_sentences(self, node: TrieNode) -> List[str]:
+        sentences = []
+        self.dfs(node, self.keyword, sentences)
+        sentences.sort(key=lambda x: (-x[0], x[1]))  # Sorting based on hot degree and lexicographically
+        return [sentence[1] for sentence in sentences[:3]]
+
+    def dfs(self, node: TrieNode, prefix: str, sentences: List[str]) -> None:
+        if node.times > 0:
+            sentences.append((node.times, prefix))
+        for char, child in node.children.items():
+            self.dfs(child, prefix + char, sentences)
