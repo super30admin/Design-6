@@ -1,0 +1,52 @@
+class AutocompleteSystem {
+
+    Map<String, Integer> database = new HashMap<>();
+    String input_tracker="";
+    
+    public AutocompleteSystem(String[] sentences, int[] times) {
+        for(int i=0; i<sentences.length; i++){
+            database.put(sentences[i],times[i]);
+        }
+    }
+    
+    public List<String> input(char c) {
+        
+        if(c=='#'){
+            database.put(input_tracker, database.getOrDefault(input_tracker,0)+1);
+            input_tracker="";
+            return new ArrayList<>();
+        }
+    
+        input_tracker+=c;
+
+        PriorityQueue<Pair> pq = new PriorityQueue<>((a, b) -> (a.count == b.count ? a.sentence.compareTo(b.sentence) : b.count - a.count));
+        
+        for (String s : database.keySet()) {
+            if (s.startsWith(input_tracker))
+                pq.add(new Pair(s, database.get(s)));
+        }
+
+        List<String> res = new ArrayList<String>();
+        while(!pq.isEmpty() && res.size() < 3) {
+            Pair a = pq.poll();
+            res.add(a.sentence);
+        }
+        
+        return res;
+    }
+    
+    public class Pair {
+        String sentence;
+        int count;
+        public Pair(String s, int c) {
+            sentence = s;
+            count = c;
+        }
+    }
+}
+
+/**
+ * Your AutocompleteSystem object will be instantiated and called as such:
+ * AutocompleteSystem obj = new AutocompleteSystem(sentences, times);
+ * List<String> param_1 = obj.input(c);
+ */
