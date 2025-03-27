@@ -1,0 +1,322 @@
+// Time Complexity :O(N)+O(Nlogk)
+// Space Complexity :O(N)+O(k)
+// Did this code successfully run on Leetcode :yes
+// Any problem you faced while coding this :no
+
+
+// Your code here along with comments explaining your approach:
+
+
+// "static void main" must be defined in a public class.
+public class Main {
+    public static void main(String[] args) {
+         String[] Sentences=new String[4];
+         int[] times=new int[4];
+          Sentences[0]="i love you";
+          Sentences[1]="island";
+          Sentences[2]="iroman";
+          Sentences[3]="i love leetcode";
+      
+         times[0]=5;
+         times[1]=3;
+         times[2]=2;
+         times[3]=2;
+        AutocompleteSystem obj=new AutocompleteSystem(Sentences,times);
+         System.out.println("Hello World!"+obj.input('i')); 
+         System.out.println("Hello World!"+obj.input(' '));
+        System.out.println("Hello World!"+obj.input('a')); 
+         System.out.println("Hello World!"+obj.input('#')); 
+
+    }
+}
+ class AutocompleteSystem{
+    HashMap<String,Integer> myMap;
+    String input;
+    public AutocompleteSystem(String[] sentences,int[] times){
+        this.myMap = new HashMap<>();
+        this.input="";
+        for(int i=0;i<sentences.length;i++){//O(N)
+            String st=sentences[i];
+            int cnt=times[i];
+            this.myMap.put(st,myMap.getOrDefault(st,0)+cnt);//frequency map for strings and number of previous occurences
+        }
+    }
+  
+    public List<String> input(char c){
+        if( c == '#'){ //if char is #
+            this.myMap.put(input,this.myMap.getOrDefault(input,0)+1); //just adding input string ot frequncy map
+            this.input=""; //making empty
+            return new ArrayList<>();//returning empty list 
+        }
+        this.input=this.input + c;//appending input char to previos input which has been enterd till now
+         List<String> li=new ArrayList<>();//new list for hotter search list
+        //priority queue to process only k most hottest strings for input
+        PriorityQueue<String> pq=new PriorityQueue<>((a,b)->{
+            int cnt1=myMap.get(a);
+            int cnt2=myMap.get(b);
+            if(cnt1 == cnt2){//if frequency is same
+                 int com= b.compareTo(a);//lexicographically comparing
+                 return com;
+            }
+            return cnt1-cnt2;//as per frequency
+        });
+        //ckecking over all keys in the hashmap whether to check matching word which is strting with input
+        for(String key:myMap.keySet()){//O(N)
+            if(key.startsWith(input)){
+                pq.add(key);//logk //adding prefix matching words to priorityqueue
+                if(pq.size() > 3){//polling if queue is greater than  because we should give 3 hott degrees only 
+                    pq.poll();
+                }a
+            }
+        }
+        
+            //processing and adding them to list
+        while(!pq.isEmpty()){
+            String ne=pq.poll();
+            li.add(0,ne);
+        }
+        return li;
+    }
+}
+
+
+
+// Time Complexity :O(N)+O(nlogk)
+// Space Complexity :O(N)+O(NL)+O(n)+O(k)
+// Did this code successfully run on Leetcode :yes
+// Any problem you faced while coding this :no
+
+
+// Your code here along with comments explaining your approach:
+
+
+// "static void main" must be defined in a public class.
+public class Main {
+    public static void main(String[] args) {
+        String[] Sentences = new String[4];
+        int[] times = new int[4];
+        Sentences[0] = "i love you";
+        Sentences[1] = "island";
+        Sentences[2] = "iroman";
+        Sentences[3] = "i love leetcode";
+
+        times[0] = 5;
+        times[1] = 3;
+        times[2] = 2;
+        times[3] = 2;
+        AutocompleteSystem obj = new AutocompleteSystem(Sentences, times);
+        System.out.println("Hello World!" + obj.input('i'));
+        System.out.println("Hello World!" + obj.input(' '));
+        System.out.println("Hello World!" + obj.input('a'));
+        System.out.println("Hello World!" + obj.input('#'));
+
+    }
+}
+class AutocompleteSystem {
+    HashMap < String, Integer > myMap;
+    String input;
+    class TrieNode {
+        TrieNode[] children;
+        List < String > li;
+        public TrieNode() {
+            this.children = new TrieNode[136];
+            this.li = new ArrayList <> ();
+        }
+    }
+    private TrieNode root;
+    public AutocompleteSystem(String[] sentences, int[] times) {
+        this.myMap = new HashMap < > ();
+        this.input = "";
+        this.root = new TrieNode();
+        for (int i = 0; i < sentences.length; i++) { //O(N)
+            String st = sentences[i];
+            int freq = times[i];
+           if(!myMap.containsKey(st)){
+               insert(st);
+           }
+            this.myMap.put(st, myMap.getOrDefault(st, 0) + freq); //frequency map for strings and number of previous occurences
+           
+        }
+    }
+    public void insert(String st) {
+        TrieNode curr = root;
+        for (int i = 0; i < st.length(); i++) {//O(l) length of string
+            char ch = st.charAt(i);
+            if (curr.children[ch-' '] == null ) {
+               curr.children[ch-' ']=new TrieNode();
+            }
+            curr =  curr.children[ch-' '];
+            curr.li.add(st);
+        }
+    }
+    public List < String > search(String st) {
+        TrieNode curr = root;
+        for (int i = 0; i < st.length(); i++) {//O(l) length of string
+            char ch = input.charAt(i);
+            if (curr.children[ch - ' '] == null) {
+                return new ArrayList < > ();
+            }
+            curr = curr.children[ch - ' '];
+            //new list for hotter search list
+        }
+        return curr.li;
+    }
+    public List < String > input(char c) {
+        if (c == '#') { //if char is #
+            if (!myMap.containsKey(input)) {
+                insert(input);
+            }
+            this.myMap.put(input, this.myMap.getOrDefault(input, 0) + 1); //just adding input string ot frequncy map
+            //need to add to trie
+            this.input = ""; //making empty
+            return new ArrayList < > (); //returning empty list 
+        }
+        this.input = this.input + c;
+         PriorityQueue<String> pq=new PriorityQueue<>((a,b)->{
+            int cnt1=myMap.get(a);
+            int cnt2=myMap.get(b);
+            if(cnt1 == cnt2){//if frequency is same
+                 int com= b.compareTo(a);//lexicographically comparing
+                 return com;
+            }
+            return cnt1-cnt2;//as per frequency
+        });
+        List < String > li=search(input);
+        List < String > result = new ArrayList < > ();
+        for (String key: li) {//O(nlogk)
+            pq.add(key); //logk //adding prefix matching words to priorityqueue
+            if (pq.size() > 3) { //polling if queue is greater than  because we should give 3 hott degrees only 
+                pq.poll();
+            }
+
+        }
+        //processing and adding them to list
+        while (!pq.isEmpty()) {
+            String ne = pq.poll();
+            result.add(0, ne);
+        }
+        return result;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Time Complexity :O(NL)
+// Space Complexity :O(N)+O(NL)+O(NL)
+// Did this code successfully run on Leetcode :yes
+// Any problem you faced while coding this :no
+
+
+// Your code here along with comments explaining your approach:
+
+
+// "static void main" must be defined in a public class.
+public class Main {
+    public static void main(String[] args) {
+        String[] Sentences = new String[4];
+        int[] times = new int[4];
+        Sentences[0] = "i love you";
+        Sentences[1] = "island";
+        Sentences[2] = "iroman";
+        Sentences[3] = "i love leetcode";
+
+        times[0] = 5;
+        times[1] = 3;
+        times[2] = 2;
+        times[3] = 2;
+        AutocompleteSystem obj = new AutocompleteSystem(Sentences, times);
+        System.out.println("Hello World!" + obj.input('i'));
+        System.out.println("Hello World!" + obj.input(' '));
+        System.out.println("Hello World!" + obj.input('a'));
+        System.out.println("Hello World!" + obj.input('#'));
+
+    }
+}
+class AutocompleteSystem {
+    HashMap < String, Integer > myMap;
+    String input;
+    class TrieNode {
+        // TrieNode[] children;
+        HashMap<Character,TrieNode> children;
+        List < String > li;
+        public TrieNode() {
+            this.children = new HashMap<>();
+            this.li = new ArrayList <> ();
+        }
+    }
+    private TrieNode root;
+    public AutocompleteSystem(String[] sentences, int[] times) {
+        this.myMap = new HashMap < > ();
+        this.input = "";
+        this.root = new TrieNode();
+        for (int i = 0; i < sentences.length; i++) { //O(N)
+            String st = sentences[i];
+            int freq = times[i];
+            this.myMap.put(st, myMap.getOrDefault(st, 0) + freq); //frequency map for strings and number of previous occurences
+             insert(st);//insertin ginto trie
+        }
+    }
+    public void insert(String st) {
+        TrieNode curr = root;
+        for (int i = 0; i < st.length(); i++) {//O(l) length of string
+            char ch = st.charAt(i);
+            if (!curr.children.containsKey(ch) ) {//O(1)
+                curr.children.put(ch,new TrieNode());
+            }
+           curr = curr.children.get(ch);//O(1)
+              if(!curr.li.contains(st)){ //if statement does not exist add it to list
+                  curr.li.add(st);
+              }
+              //aleady exist then change the order as per frequncy
+             List < String > top3=curr.li; //getting list from trie
+            Collections.sort(top3,(a,b)->{//O(3log3)
+            int cnt1=myMap.get(a);
+            int cnt2=myMap.get(b);
+            if(cnt1 == cnt2){//if frequency is same
+                 int com= a.compareTo(b);//lexicographically comparing
+                 return com;
+            }
+            return cnt2-cnt1;//as per frequency
+        });
+            if(top3 .size()>3){
+                top3.remove(top3.size()-1);
+            }
+            
+        }
+    }
+    public List < String > search(String st) {
+        TrieNode curr = root;
+        for (int i = 0; i < st.length(); i++) {//O(l) length of string
+            char ch = input.charAt(i);
+            if (!curr.children.containsKey(ch)) {
+                return new ArrayList < > ();
+            }
+            curr = curr.children.get(ch);
+            //new list for hotter search list
+        }
+        return curr.li;
+    }
+    public List < String > input(char c) {
+        if (c == '#') { //if char is #
+            this.myMap.put(input, this.myMap.getOrDefault(input, 0) + 1); //just adding input string ot frequncy map
+            insert(input);//O(l)
+            //need to add to trie
+            this.input = ""; //making empty
+            return new ArrayList < > (); //returning empty list 
+        }
+        this.input = this.input + c; //appending input char to previos input which has been enterd till now
+        return search(input);
+    }
+}

@@ -1,0 +1,50 @@
+// Time Complexity :O(n)
+// Space Complexity :O(n)+O(n)
+// Did this code successfully run on Leetcode :yes
+// Any problem you faced while coding this :no
+// Your code here along with comments explaining your approach:
+
+// "static void main" must be defined in a public class.
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello World!");
+        PhoneDirectory phoneDirectory = new PhoneDirectory(3);
+        System.out.println("Hello World!"+phoneDirectory.get());     
+        System.out.println("Hello World!"+phoneDirectory.get());   
+        System.out.println("Hello World!"+phoneDirectory.check(2));
+        System.out.println("Hello World!"+phoneDirectory.get());
+         System.out.println("Hello World!"+phoneDirectory.check(2));
+        phoneDirectory.release(2);
+         System.out.println("Hello World!"+phoneDirectory.check(2));
+    }
+}
+class PhoneDirectory{
+    HashSet<Integer> mySet;
+    Queue<Integer> myQue;
+    public PhoneDirectory(int maxNumbers){
+        this.mySet=new HashSet<>();//O(n) //to store n numbers 
+        this.myQue=new LinkedList<>();//O(n) //to store n numbers 
+        for(int i=0;i<maxNumbers;i++){//O(n)
+            mySet.add(i); //to check in O(1) when we need to check whether number is availble or not
+            myQue.add(i); // to give any number which is available in O(1)
+        }
+    }
+    public int get(){//O(1)
+        int polled=myQue.poll();//getting availble numbers from queue
+        mySet.remove(polled); //as removing it from set as well 
+        return polled;
+    }
+    public boolean check(int number){ 
+        if(mySet.contains(number)){ //if number exist in set return true
+            return true;
+        }
+        return false;
+    }
+    public void release(int number){
+        if(mySet.contains(number))return;
+        mySet.add(number);
+        myQue.add(number);
+        
+    }
+    
+}
