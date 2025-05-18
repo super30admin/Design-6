@@ -1,0 +1,34 @@
+//time: O(1)
+//Space: O(n)
+class PhoneDirectory(object):
+
+    def __init__(self, maxNumbers):
+        """
+        :type maxNumbers: int
+        """
+        self.available = set(range(maxNumbers))  # All numbers initially available
+        self.maxNumbers = maxNumbers
+
+    def get(self):
+        """
+        :rtype: int
+        """
+        if self.available:
+            number = self.available.pop()
+            return number
+        return -1
+
+    def check(self, number):
+        """
+        :type number: int
+        :rtype: bool
+        """
+        return number in self.available
+
+    def release(self, number):
+        """
+        :type number: int
+        :rtype: None
+        """
+        if 0 <= number < self.maxNumbers:
+            self.available.add(number)
