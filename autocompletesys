@@ -1,0 +1,57 @@
+//Time:O(L)
+//Space:O(L)
+
+
+import heapq
+from collections import defaultdict
+
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.hot_sentences = []  # list of top 3 strings
+
+class AutocompleteSystem:
+    def __init__(self, sentences, times):
+        self.root = TrieNode()
+        self.sentence_freq = defaultdict(int)
+        self.current_input = ""
+        self.current_node = self.root
+
+        for sentence, time in zip(sentences, times):
+            self.sentence_freq[sentence] += time
+            self._insert(sentence)
+
+    def _insert(self, sentence):
+        node = self.root
+        for char in sentence:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
+            self._update_top_3(node, sentence)
+
+    def _update_top_3(self, node, sentence):
+        # Add the sentence, then sort and trim to top 3
+        if sentence not in node.hot_sentences:
+            node.hot_sentences.append(sentence)
+        
+        # Sort by (-frequency, sentence) and keep top 3
+        node.hot_sentences.sort(key=lambda s: (-self.sentence_freq[s], s))
+        if len(node.hot_sentences) > 3:
+            node.hot_sentences.pop()
+
+    def input(self, c):
+        if c == "#":
+            self.sentence_freq[self.current_input] += 1
+            self._insert(self.current_input)
+            self.current_input = ""
+            self.current_node = self.root
+            return []
+
+        self.current_input += c
+        if self.current_node and c in self.current_node.children:
+            self.current_node = self.current_node.children[c]
+        else:
+            self.current_node = None
+            return []
+
+        return self.current_node.hot_sentences
